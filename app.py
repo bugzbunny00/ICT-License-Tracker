@@ -1,13 +1,19 @@
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS  # new import
 import json
-from datetime import datetime, date
 import csv
 import os
 
 app = Flask(__name__)
+CORS(app)  # allow CORS on all routes for simplicity
+
 DATA_FILE = 'licenses.json'
 
 def load_data():
+    # Make sure the file exists, if not create it with empty list
+    if not os.path.exists(DATA_FILE):
+        with open(DATA_FILE, 'w') as f:
+            json.dump([], f)
     with open(DATA_FILE, 'r') as f:
         return json.load(f)
 
@@ -22,6 +28,8 @@ def get_licenses():
 @app.route('/api/licenses', methods=['POST'])
 def add_license():
     new = request.get_json()
+    if not new:
+        return jsonify({"error": "No data provided"}), 400
     data = load_data()
     data.append(new)
     save_data(data)
@@ -30,6 +38,8 @@ def add_license():
 @app.route('/api/licenses/<int:index>', methods=['PUT'])
 def update_license(index):
     updated = request.get_json()
+    if not updated:
+        return jsonify({"error": "No data provided"}), 400
     data = load_data()
     if 0 <= index < len(data):
         data[index] = updated
@@ -46,11 +56,11 @@ def delete_license(index):
         return jsonify({"status": "ok"})
     return jsonify({"error": "index out of range"}), 404
 
-@app.route('/api/export_csv')
+@app.route('/api/export_csv', methods=['GET'])
 def export_csv():
     data = load_data()
-    csv_file = 'licenses_export.csv'
-    with open(csv_file, 'w', newline='') as f:
+    csv_filename = 'licenses_export.csv'
+    with open(csv_filename, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['Name','Start Date','End Date','Active','Level'])
         for lic in data:
@@ -61,7 +71,9 @@ def export_csv():
                 lic.get('active'),
                 lic.get('level')
             ])
-    return send_file(csv_file, as_attachment=True)
+    return send_file(csv_filename, as_attachment=True, mimetype='text/csv')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)  # Use port 10000 for Render
+    # Use port from environment (useful on Render)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
