@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Tracker Dashboard</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header-container">
+        <h1>Software License Tracker</h1>
+        <div class="controls">
+            <div class="filter-container">
+                <select id="filter-status" class="filter-select">
+                    <option value="all">All Licenses</option>
+                    <option value="active">Active Only</option>
+                    <option value="inactive">Inactive Only</option>
+                    <option value="expiring">Expiring Soon</option>
+                    <option value="expired">Expired</option>
+                </select>
+                <select id="filter-priority" class="filter-select">
+                    <option value="all">All Priorities</option>
+                    <option value="1">Low Priority</option>
+                    <option value="2">Medium Priority</option>
+                    <option value="3">High Priority</option>
+                </select>
+            </div>
+            <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
+            <a href="/edit" class="btn btn-secondary">Manage Licenses</a>
+        </div>
+    </div>
+    
+    <div id="cards-container"></div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
