@@ -21,6 +21,10 @@ def save_data(data):
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)
 
+@app.route('/api/pulse', methods=['GET'])
+def pulse():
+    return jsonify({"status": "ok"}), 200
+
 @app.route('/api/licenses', methods=['GET'])
 def get_licenses():
     return jsonify(load_data())
