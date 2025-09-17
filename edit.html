@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Management</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/edit.css">
+</head>
+<body>
+    <div class="edit-container">
+        <header class="edit-header">
+            <h1>License Management</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="showAddForm()">Add New License</button>
+                <button id="theme-toggle" class="btn btn-secondary">🌙 Dark Mode</button>
+                <!-- Updated link to work with GitHub Pages -->
+                <a href="index.html" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </header>
+
+        <div class="licenses-list" id="licenses-list">
+            <!-- Licenses will be loaded here -->
+        </div>
+
+        <!-- Add/Edit Form Modal -->
+        <div id="license-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Add New License</h2>
+                    <button class="close-btn" onclick="closeModal()">&times;</button>
+                </div>
+                <form id="license-form">
+                    <div class="form-group">
+                        <label for="name">License Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="start_date">Start Date (DD/MM/YYYY) *</label>
+                            <input type="text" id="start_date" name="start_date" placeholder="29/10/2020" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end_date">End Date (DD/MM/YYYY) *</label>
+                            <input type="text" id="end_date" name="end_date" placeholder="1/8/2025" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="level">Priority Level *</label>
+                            <select id="level" name="level" required>
+                                <option value="1">Low Priority</option>
+                                <option value="2">Medium Priority</option>
+                                <option value="3">High Priority</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Status</label>
+                            <select id="active" name="active">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save License</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Confirm Delete</h2>
+                    <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this license?</p>
+                    <p><strong id="delete-license-name"></strong></p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated script path for GitHub Pages -->
+    <script src="js/edit.js"></script>
+</body>
+</html>
