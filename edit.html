@@ -4,95 +4,172 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>License Management</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/edit.css">
+    <!-- Added Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Added Flatpickr CSS for date picker styling -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom styles for date picker dark mode */
+        .dark .flatpickr-calendar {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        .dark .flatpickr-day {
+            color: #f3f4f6;
+        }
+        .dark .flatpickr-day:hover {
+            background: #4b5563;
+        }
+        .dark .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .dark .flatpickr-current-month input.cur-year {
+            background: #374151;
+            color: #f3f4f6;
+        }
+    </style>
 </head>
-<body>
-    <div class="edit-container">
-        <header class="edit-header">
-            <h1>License Management</h1>
-            <div class="header-actions">
-                <button class="btn btn-primary" onclick="showAddForm()">Add New License</button>
-                <button id="theme-toggle" class="btn btn-secondary">🌙 Dark Mode</button>
-                <!-- Updated link to work with GitHub Pages -->
-                <a href="index.html" class="btn btn-secondary">Back to Dashboard</a>
-            </div>
-        </header>
-
-        <div class="licenses-list" id="licenses-list">
-            <!-- Licenses will be loaded here -->
-        </div>
-
-        <!-- Add/Edit Form Modal -->
-        <div id="license-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modal-title">Add New License</h2>
-                    <button class="close-btn" onclick="closeModal()">&times;</button>
-                </div>
-                <form id="license-form">
-                    <div class="form-group">
-                        <label for="name">License Name *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="start_date">Start Date (DD/MM/YYYY) *</label>
-                            <input type="text" id="start_date" name="start_date" placeholder="29/10/2020" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="end_date">End Date (DD/MM/YYYY) *</label>
-                            <input type="text" id="end_date" name="end_date" placeholder="1/8/2025" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="level">Priority Level *</label>
-                            <select id="level" name="level" required>
-                                <option value="1">Low Priority</option>
-                                <option value="2">Medium Priority</option>
-                                <option value="3">High Priority</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="active">Status</label>
-                            <select id="active" name="active">
-                                <option value="true">Active</option>
-                                <option value="false">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save License</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Delete Confirmation Modal -->
-        <div id="delete-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Confirm Delete</h2>
-                    <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this license?</p>
-                    <p><strong id="delete-license-name"></strong></p>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <!-- Redesigned header with Tailwind classes -->
+    <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">License Management</h1>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium" onclick="showAddForm()">
+                        Add New License
+                    </button>
+                    <button id="theme-toggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors text-sm font-medium">
+                        🌙 Dark Mode
+                    </button>
+                    <a href="index.html" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium">
+                        Back to Dashboard
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Updated script path for GitHub Pages -->
+    <!-- Converted to table layout instead of cards -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">License Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Priority</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Start Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">End Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Days Remaining</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="licenses-table-body" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Licenses will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated modal styling with Tailwind -->
+    <div id="license-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto mx-auto">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 id="modal-title" class="text-xl font-semibold text-gray-900 dark:text-white">Add New License</h2>
+                <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="closeModal()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="license-form" class="p-6 space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">License Name *</label>
+                    <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                </div>
+                
+                <!-- Updated date inputs to use date type with proper styling -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Start Date *</label>
+                        <input type="date" id="start_date" name="start_date" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                    </div>
+                    <div>
+                        <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">End Date *</label>
+                        <input type="date" id="end_date" name="end_date" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="level" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Priority Level *</label>
+                        <select id="level" name="level" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            <option value="1">Low Priority</option>
+                            <option value="2">Medium Priority</option>
+                            <option value="3">High Priority</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="active" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                        <select id="active" name="active" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3 pt-6">
+                    <button type="button" class="flex-1 px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors font-medium" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium">Save License</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Updated delete modal styling with Tailwind -->
+    <div id="delete-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Confirm Delete</h2>
+                <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="closeDeleteModal()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-600 dark:text-gray-300 mb-2">Are you sure you want to delete this license?</p>
+                <p class="font-semibold text-gray-900 dark:text-white" id="delete-license-name"></p>
+            </div>
+            <div class="flex gap-3 p-6 pt-0">
+                <button type="button" class="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors font-medium" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Added Flatpickr JavaScript for enhanced date picker functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="js/edit.js"></script>
 </body>
 </html>

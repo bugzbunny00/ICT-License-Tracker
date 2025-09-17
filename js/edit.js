@@ -3,6 +3,7 @@ const API_BASE_URL = "https://ict-license-tracker.onrender.com"
 let currentEditingIndex = -1
 let deleteIndex = -1
 let isDarkMode = false
+let startDatePicker, endDatePicker
 
 // Parse DD/MM/YYYY date format
 function parseDate(dateStr) {
@@ -15,6 +16,18 @@ function formatDate(date) {
   const day = String(date.getDate()).padStart(2, "0")
   const month = String(date.getMonth() + 1).padStart(2, "0")
   const year = date.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
+function convertToDateInput(ddmmyyyy) {
+  if (!ddmmyyyy) return ""
+  const [day, month, year] = ddmmyyyy.split("/")
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
+}
+
+function convertFromDateInput(yyyymmdd) {
+  if (!yyyymmdd) return ""
+  const [year, month, day] = yyyymmdd.split("-")
   return `${day}/${month}/${year}`
 }
 
@@ -62,16 +75,19 @@ async function loadLicenses() {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     const licenses = await response.json()
-    const container = document.getElementById("licenses-list")
+    const tableBody = document.getElementById("licenses-table-body")
 
-    container.innerHTML = ""
+    tableBody.innerHTML = ""
 
     licenses.forEach((license, index) => {
       const remainingDays = calculateRemainingDays(license.start_date, license.end_date)
       const statusClass = getStatusClass(remainingDays)
 
-      const licenseItem = document.createElement("div")
-      licenseItem.className = `license-item ${statusClass}`
+      const row = document.createElement("tr")
+      const inactiveClass = !license.active
+        ? "bg-gray-800 dark:bg-black opacity-60"
+        : "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+      row.className = `${inactiveClass} transition-colors`
 
       const statusText =
         remainingDays > 0
@@ -85,8 +101,13 @@ async function loadLicenses() {
       // Generate level indicators (1-3 circles based on level)
       const levelIndicators = Array.from({ length: 3 }, (_, i) => {
         const isFilled = i < license.level
-        const levelClass = license.level === 2 ? "level-2" : license.level === 3 ? "level-3" : ""
-        return `<div class="level-circle ${isFilled ? "filled" : ""} ${levelClass}"></div>`
+        let levelColor = "bg-gray-300 dark:bg-gray-600"
+        if (isFilled) {
+          if (license.level === 1) levelColor = "bg-green-500"
+          else if (license.level === 2) levelColor = "bg-yellow-500"
+          else if (license.level === 3) levelColor = "bg-red-500"
+        }
+        return `<div class="w-3 h-3 rounded-full ${levelColor}"></div>`
       }).join("")
 
       const daysText =
@@ -96,40 +117,66 @@ async function loadLicenses() {
             ? "Today"
             : `${Math.abs(remainingDays)} days ago`
 
-      licenseItem.innerHTML = `
-                <div class="license-header">
-                    <h3 class="license-title">${license.name}</h3>
-                    <div class="level-indicators">
+      let statusBadgeClass = "px-2 py-1 rounded-full text-xs font-medium"
+      if (statusClass === "active")
+        statusBadgeClass += " bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+      else if (statusClass === "expiring")
+        statusBadgeClass += " bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+      else statusBadgeClass += " bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+
+      const textColor = !license.active ? "text-gray-500 dark:text-gray-600" : "text-gray-900 dark:text-white"
+      const subtextColor = !license.active ? "text-gray-600 dark:text-gray-700" : "text-gray-600 dark:text-gray-400"
+
+      row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                        <div class="text-sm font-medium ${textColor}">${license.name}</div>
+                        ${!license.active ? '<div class="text-xs text-gray-500 dark:text-gray-600 mt-1 font-semibold">INACTIVE</div>' : ""}
+                    </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex gap-1">
                         ${levelIndicators}
                     </div>
-                </div>
-                <div class="license-content">
-                    <div class="date-info">
-                        <span class="start-date">Started: ${formatDisplayDate(license.start_date)}</span>
-                        <div class="expiry-info">
-                            <span class="expiry-text">Expires: ${formatDisplayDate(license.end_date)}</span>
-                            <span class="days-badge ${statusClass}">${daysText}</span>
-                        </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm ${subtextColor}">
+                    ${formatDisplayDate(license.start_date)}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm ${subtextColor}">
+                    ${formatDisplayDate(license.end_date)}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="${statusBadgeClass}">
+                        ${license.active ? (statusClass === "active" ? "Active" : statusClass === "expiring" ? "Expiring" : "Expired") : "Inactive"}
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm ${subtextColor}">
+                    ${daysText}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex gap-2">
+                        <button class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" onclick="editLicense(${index})">Edit</button>
+                        <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" onclick="showDeleteModal(${index}, '${license.name}')">Delete</button>
                     </div>
-                    <div class="license-actions">
-                        <button class="btn btn-primary btn-small" onclick="editLicense(${index})">Edit</button>
-                        <button class="btn btn-danger btn-small" onclick="showDeleteModal(${index}, '${license.name}')">Delete</button>
-                    </div>
-                </div>
+                </td>
             `
 
-      container.appendChild(licenseItem)
+      tableBody.appendChild(row)
     })
   } catch (error) {
     console.error("Error loading licenses:", error)
-    const container = document.getElementById("licenses-list")
-    container.innerHTML = `
-            <div class="error-message">
-                <h3>Error Loading Licenses</h3>
-                <p>Unable to connect to the server. Please check your connection and try again.</p>
-                <p>Error: ${error.message}</p>
-                <button onclick="loadLicenses()" class="btn btn-secondary" style="margin-top: 15px;">Retry</button>
-            </div>
+    const tableBody = document.getElementById("licenses-table-body")
+    tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="px-6 py-12 text-center">
+                    <div class="text-gray-500 dark:text-gray-400">
+                        <h3 class="text-lg font-semibold mb-2">Error Loading Licenses</h3>
+                        <p class="mb-4">Unable to connect to the server. Please check your connection and try again.</p>
+                        <p class="text-sm mb-4">Error: ${error.message}</p>
+                        <button onclick="loadLicenses()" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">Retry</button>
+                    </div>
+                </td>
+            </tr>
         `
   }
 }
@@ -139,7 +186,7 @@ function showAddForm() {
   currentEditingIndex = -1
   document.getElementById("modal-title").textContent = "Add New License"
   document.getElementById("license-form").reset()
-  document.getElementById("license-modal").style.display = "block"
+  document.getElementById("license-modal").style.display = "flex"
 }
 
 // Edit license
@@ -157,11 +204,11 @@ function editLicense(index) {
       const license = licenses[index]
       document.getElementById("modal-title").textContent = "Edit License"
       document.getElementById("name").value = license.name
-      document.getElementById("start_date").value = license.start_date
-      document.getElementById("end_date").value = license.end_date
+      document.getElementById("start_date").value = convertToDateInput(license.start_date)
+      document.getElementById("end_date").value = convertToDateInput(license.end_date)
       document.getElementById("level").value = license.level
       document.getElementById("active").value = license.active.toString()
-      document.getElementById("license-modal").style.display = "block"
+      document.getElementById("license-modal").style.display = "flex"
     })
     .catch((error) => {
       console.error("Error loading license:", error)
@@ -179,7 +226,7 @@ function closeModal() {
 function showDeleteModal(index, licenseName) {
   deleteIndex = index
   document.getElementById("delete-license-name").textContent = licenseName
-  document.getElementById("delete-modal").style.display = "block"
+  document.getElementById("delete-modal").style.display = "flex"
 }
 
 // Close delete modal
@@ -217,8 +264,8 @@ document.getElementById("license-form").addEventListener("submit", async functio
   const formData = new FormData(this)
   const licenseData = {
     name: formData.get("name"),
-    start_date: formData.get("start_date"),
-    end_date: formData.get("end_date"),
+    start_date: convertFromDateInput(formData.get("start_date")),
+    end_date: convertFromDateInput(formData.get("end_date")),
     level: Number.parseInt(formData.get("level")),
     active: formData.get("active") === "true",
   }
@@ -229,10 +276,8 @@ document.getElementById("license-form").addEventListener("submit", async functio
     return
   }
 
-  // Validate date format (DD/MM/YYYY)
-  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/
-  if (!dateRegex.test(licenseData.start_date) || !dateRegex.test(licenseData.end_date)) {
-    alert("Please enter dates in DD/MM/YYYY format.")
+  if (!licenseData.start_date || !licenseData.end_date) {
+    alert("Please select both start and end dates.")
     return
   }
 
@@ -302,15 +347,15 @@ function initializeTheme() {
 
 function toggleTheme() {
   isDarkMode = !isDarkMode
-  const body = document.body
+  const html = document.documentElement
   const themeToggle = document.getElementById("theme-toggle")
 
   if (isDarkMode) {
-    body.classList.add("dark-mode")
+    html.classList.add("dark")
     themeToggle.textContent = "☀️ Light Mode"
     localStorage.setItem("theme", "dark")
   } else {
-    body.classList.remove("dark-mode")
+    html.classList.remove("dark")
     themeToggle.textContent = "🌙 Dark Mode"
     localStorage.setItem("theme", "light")
   }

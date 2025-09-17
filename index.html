@@ -4,37 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>License Tracker Dashboard</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- Added Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
-    <div class="header-container">
-        <h1>Software License Tracker</h1>
-        <div class="controls">
-            <div class="filter-container">
-                <select id="filter-status" class="filter-select">
-                    <option value="all">All Licenses</option>
-                    <option value="active">Active Only</option>
-                    <option value="inactive">Inactive Only</option>
-                    <option value="expiring">Expiring Soon</option>
-                    <option value="expired">Expired</option>
-                </select>
-                <select id="filter-priority" class="filter-select">
-                    <option value="all">All Priorities</option>
-                    <option value="1">Low Priority</option>
-                    <option value="2">Medium Priority</option>
-                    <option value="3">High Priority</option>
-                </select>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <!-- Redesigned header with Tailwind classes -->
+    <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Software License Tracker</h1>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex gap-2">
+                        <select id="filter-status" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            <option value="all">All Licenses</option>
+                            <option value="active">Active Only</option>
+                            <option value="inactive">Inactive Only</option>
+                            <option value="expiring">Expiring Soon</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                        <select id="filter-priority" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            <option value="all">All Priorities</option>
+                            <option value="1">Low Priority</option>
+                            <option value="2">Medium Priority</option>
+                            <option value="3">High Priority</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="theme-toggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors text-sm font-medium">
+                            🌙 Dark Mode
+                        </button>
+                        <a href="edit.html" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
+                            Manage Licenses
+                        </a>
+                    </div>
+                </div>
             </div>
-            <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
-            <!-- Updated link to work with GitHub Pages -->
-            <a href="edit.html" class="btn btn-secondary">Manage Licenses</a>
         </div>
     </div>
     
-    <div id="cards-container"></div>
+    <!-- Updated container with Tailwind grid layout -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
 
-    <!-- Updated script path for GitHub Pages -->
     <script src="js/dashboard.js"></script>
 </body>
 </html>
