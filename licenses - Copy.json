@@ -1,0 +1,20 @@
+[
+	{"name":"PRTG Network Monitor","start_date":"29/10/2020","end_date":"1/8/2025","active":true,"level":1},
+	{"name":"Adobe","start_date":"25/12/2024","end_date":"25/11/2025","active":true,"level":2},
+	{"name":"HR Metrics Annual License","start_date":"3/1/2024","end_date":"1/1/2026","active":true,"level":3},
+	{"name":"LS POS Annual Support Service","start_date":"8/1/2025","end_date":"7/1/2026","active":true,"level":3},
+	{"name":"Hostgator Web Hosting","start_date":"31/08/2025","end_date":"3/3/2026","active":true,"level":3},
+	{"name":"AutoCAD","start_date":"28/04/2025","end_date":"27/04/2026","active":true,"level":1},
+	{"name":"Zoho Sign - Digital Signature","start_date":"1/5/2021","end_date":"28/04/2026","active":true,"level":2},
+	{"name":"SonicWall Network Security App","start_date":"24/05/2025","end_date":"2/6/2026","active":true,"level":3},
+	{"name":"Microsoft 365 Office License","start_date":"18/08/2025","end_date":"18/08/2026","active":true,"level":2},
+	{"name":"Sophos Endpoint Protection","start_date":"28/09/2025","end_date":"27/09/2026","active":true,"level":3},
+	{"name":"3CX IP PBX System","start_date":"24/07/2025","end_date":"24/07/2027","active":true,"level":2},
+	{"name":"Apple Developer Account","start_date":"26/04/2023","end_date":"26/04/2024","active":false,"level":1},
+	{"name":"Microsoft Project","start_date":"20/09/2022","end_date":"20/09/2023","active":false,"level":1},
+	{"name":"Microsoft Visio","start_date":"8/2/2022","end_date":"8/2/2024","active":true,"level":1},
+	{"name":"Sketchup","start_date":"11/7/2023","end_date":"18/07/2024","active":true,"level":1},
+	{"name":"MS Dynamics AX AEP","start_date":"31/05/2023","end_date":"31/05/2025","active":true,"level":3},
+	{"name":"LS Retail","start_date":"13/06/2023","end_date":"14/06/2025","active":true,"level":3}
+
+]

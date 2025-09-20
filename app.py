@@ -1,16 +1,16 @@
-from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS  # new import
+from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask_cors import CORS
 import json
 import csv
 import os
 
-app = Flask(__name__)
-CORS(app)  # allow CORS on all routes for simplicity
+app = Flask(__name__, static_folder="static", static_url_path="/static")
+CORS(app)
+
 
 DATA_FILE = 'licenses.json'
 
 def load_data():
-    # Make sure the file exists, if not create it with empty list
     if not os.path.exists(DATA_FILE):
         with open(DATA_FILE, 'w') as f:
             json.dump([], f)
@@ -20,6 +20,8 @@ def load_data():
 def save_data(data):
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)
+
+# ----------------- API ROUTES -----------------
 
 @app.route('/api/pulse', methods=['GET'])
 def pulse():
@@ -77,7 +79,18 @@ def export_csv():
             ])
     return send_file(csv_filename, as_attachment=True, mimetype='text/csv')
 
+# ----------------- FRONTEND ROUTES -----------------
+
+@app.route('/')
+def serve_index():
+    return send_from_directory('.', 'templates/index.html')
+
+@app.route('/edit')
+def serve_edit():
+    return send_from_directory('.', 'templates/edit.html') 
+
+# ----------------- MAIN -----------------
+
 if __name__ == '__main__':
-    # Use port from environment (useful on Render)
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)

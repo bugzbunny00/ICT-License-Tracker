@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>License Tracker Dashboard</title>
+    <title>ICT Subscriptions</title>
     <!-- Added Tailwind CSS CDN for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -33,7 +33,7 @@
     <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Software License Tracker</h1>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">ICT Subscriptions</h1>
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="flex gap-2">
                         <select id="filter-status" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
@@ -54,7 +54,7 @@
                         <button id="theme-toggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors text-sm font-medium">
                             🌙 Dark Mode
                         </button>
-                        <a href="edit.html" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
+                        <a href="edit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
                             Manage Licenses
                         </a>
                     </div>
@@ -68,6 +68,6 @@
         <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </div>
 
-    <script src="js/dashboard.js"></script>
+    <script src="static/js/dashboard.js"></script>
 </body>
 </html>

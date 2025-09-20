@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://ict-license-tracker.onrender.com"
+const API_BASE_URL = "http://127.0.0.1:10000"
 
 let currentEditingIndex = -1
 let deleteIndex = -1
