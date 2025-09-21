@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("theme-toggle").addEventListener("click", toggleTheme)
   document.getElementById("filter-status").addEventListener("change", loadLicenses)
   document.getElementById("filter-priority").addEventListener("change", loadLicenses)
-
+  document.getElementById("sort-by").addEventListener("change", loadLicenses)
   // Load licenses
   loadLicenses()
 })
