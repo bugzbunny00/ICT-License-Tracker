@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://127.0.0.1:10000"
+const API_BASE_URL = "" //add the URL (http://127.0.0.1:10000) if you would like to be able to access from the local machine only!!
 
 let currentEditingIndex = -1
 let deleteIndex = -1

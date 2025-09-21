@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:10000"
+const API_BASE_URL = "" //add the URL if you would like to be able to access from the local machine only!!
 
 let isDarkMode = false
 
@@ -116,6 +116,26 @@ function displayLicenses(licenses) {
         `
     return
   }
+    // Apply sorting
+  const sortOption = document.getElementById("sort-by").value
+
+  filteredLicenses.sort((a, b) => {
+    const remainingA = calculateRemainingDays(a.start_date, a.end_date)
+    const remainingB = calculateRemainingDays(b.start_date, b.end_date)
+
+    switch (sortOption) {
+      case "priority-asc":
+        return a.level - b.level
+      case "priority-desc":
+        return b.level - a.level
+      case "duration-asc":
+        return remainingA - remainingB
+      case "duration-desc":
+        return remainingB - remainingA
+      default:
+        return 0 // No sorting
+    }
+  })
 
   container.innerHTML = ""
 
