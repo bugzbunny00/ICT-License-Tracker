@@ -246,4 +246,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("sort-by").addEventListener("change", loadLicenses)
   // Load licenses
   loadLicenses()
+
+  // Set an interval to run every 5 minutes (300,000 milliseconds)
+  setInterval(() => {
+    loadLicenses(); // Call your function before reloading
+    location.reload(); // Reload the page
+  }, 60 * 60 * 1000); // 60 minutes in milliseconds
 })
