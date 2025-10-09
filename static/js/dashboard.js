@@ -213,8 +213,17 @@ function displayLicenses(licenses) {
 // Theme management
 function initializeTheme() {
   const savedTheme = localStorage.getItem("theme")
+  const html = document.documentElement
+  const themeToggle = document.getElementById("theme-toggle")
+
   if (savedTheme === "dark") {
-    toggleTheme()
+    html.classList.add("dark")
+    themeToggle.textContent = "☀️ Light Mode"
+    isDarkMode = true
+  } else {
+    html.classList.remove("dark")
+    themeToggle.textContent = "🌙 Dark Mode"
+    isDarkMode = false
   }
 }
 
@@ -247,9 +256,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Load licenses
   loadLicenses()
 
-  // Set an interval to run every 5 minutes (300,000 milliseconds)
+  // Set an interval to run every 1 minutes (60,000 milliseconds)
   setInterval(() => {
     loadLicenses(); // Call your function before reloading
-    location.reload(); // Reload the page
-  }, 60 * 60 * 1000); // 60 minutes in milliseconds
+  }, 1 * 60 * 1000); // 60 seconds in millisecondsgit 
 })
